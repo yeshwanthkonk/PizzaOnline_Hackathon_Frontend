@@ -6,8 +6,9 @@ export default function useAuthorize({setUser, setLoading, role}) {
 
     async function Check(){
         let token_id = getToken()
-        if(!token_id)
-            return
+        if(!token_id){
+            setAuthorization({isAuth: false, token_id: null})
+        }
         let response = await fetch(window.env.API_URL+"check_status",{
             headers:{
                 "Authorization": token_id,
@@ -29,7 +30,7 @@ export default function useAuthorize({setUser, setLoading, role}) {
             setLoading("none");
         })();
         // eslint-disable-next-line
-    }, [])
+    }, [role])
 
     function getToken () {
         return sessionStorage.getItem(`${role}_token_id`);

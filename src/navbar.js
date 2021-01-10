@@ -39,8 +39,8 @@ export default function NavBar({isAuth, Logout, user}) {
                     </div>                    
                 ):(
                     <div>
-                    <a href="/login" type='button' className='btn btn-primary btn-lg btn-mr'>Login</a>
-                    <a href="/signup" type='button' className='btn btn-warning btn-lg btn-mr'>Sign up</a>
+                        <a href="/login" type='button' className='btn btn-primary btn-lg btn-mr'>Login</a>
+                        <a href="/signup" type='button' className='btn btn-warning btn-lg btn-mr'>Sign up</a>
                     </div>
                 )
             }

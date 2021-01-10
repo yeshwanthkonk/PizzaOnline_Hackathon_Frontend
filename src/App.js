@@ -6,6 +6,7 @@ import Home from "./home"
 import Notification from "./notifications"
 import NavBar from "./navbar"
 import { Login, Signup, ForgotPassword, ResetPassword } from "./user_auth_form"
+import Userboard from "./user"
 import useAuthorize from "./useAuthorize"
 import Validate from "./validate"
 
@@ -17,6 +18,7 @@ import {
 } from "react-router-dom";
 
 function App() {
+  
   const [user, setUser] = React.useState("");
   const [role, setRole] = React.useState("user");
   const [loading, setLoading] = React.useState("block");// eslint-disable-next-line
@@ -29,10 +31,15 @@ function App() {
     );
   }
 
+  React.useEffect(()=>{
+    Authenticate();// eslint-disable-next-line
+  }, [role]);
+
   const [alert, setAlert] = React.useState({"red_alert": "none", "green_alert": "none"});
 
   console.log(role);
   console.log(alert);
+  console.log(authorized.isAuth)
 
   return (
     <div>
@@ -45,7 +52,8 @@ function App() {
           <Redirect push to="/home"/>
         </Route>
         <Route path="/home">
-          <Action Page={Home}/>
+          {(authorized.isAuth)?(<Redirect push to="/user"/>):
+          <Home setAlert={setAlert}/>}
         </Route>
         <Route path="/login">
           <Action Page={Login}/>
@@ -54,24 +62,25 @@ function App() {
           <Action Page={Signup}/>
         </Route>
         <Route path="/forgot_password">
-          {
-            (authorized.isAuth)?(<Redirect push to="/user"/>):
-            <ForgotPassword saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>
-          }
+          {(authorized.isAuth)?(<Redirect push to="/user"/>):
+            <ForgotPassword saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>}
         </Route>
         <Route path="/reset_password">
-          {
-            (authorized.isAuth)?(<Redirect push to="/user"/>):
-            <ResetPassword saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>
-          }
+          {(authorized.isAuth)?(<Redirect push to="/user"/>):
+            <ResetPassword saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>}
         </Route>
         <Route path="/reset_password">
           <Action Page={Signup}/>
         </Route>
         <Route path="/admin">
-          <Admin ></Admin>
+          <Admin />
+        </Route>
+        <Route path="/user">
+          {(!authorized.isAuth)?(<Redirect push to="/home"/>):
+          <Userboard authorized={authorized} />}
         </Route>
         {/* <PrivateComponents authorized={authorized} setAlert={setAlert}/> */}
+        <Redirect to="/home"/>
       </Switch>
     </Router>
     </div>
