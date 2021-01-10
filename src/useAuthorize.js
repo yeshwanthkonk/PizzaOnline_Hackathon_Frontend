@@ -10,7 +10,6 @@ export default function useAuthorize({setUser, setLoading, role}) {
 
     async function Check(){
         let token_id = getToken()
-        console.log("Role", role);
         if(!token_id){
             setAuthorization({isAuth: false, token_id: null})
             return

@@ -77,9 +77,7 @@ function PizzaCheckout({pizzas, authorized}){
     let id = sessionStorage.getItem("id");
 
     let item = pizzas.find((item)=>item._id === id)
-    console.log(item);
     let loc = "/files/"+item.image;
-    console.log(loc)
 
     const [order_id, setOrderId] = React.useState("")
 
@@ -95,9 +93,7 @@ function PizzaCheckout({pizzas, authorized}){
                 body: JSON.stringify({price:parseInt(price)*100, "currency": "INR"}) 
             })
             let result = await response.json()
-            console.log(result)
             setOrderId(result["id"])
-            console.log(result["id"], order_id)
         }
         create_order(); // eslint-disable-next-line
     }, []);
@@ -109,7 +105,6 @@ function PizzaCheckout({pizzas, authorized}){
 
     function processed_payment(event){
         event.preventDefault();
-        console.log(order_id)
         let details = {
             "key": window.env.RAZAOR_KEY, // Enter the Key ID generated from the Dashboard
             "amount": price, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
@@ -204,7 +199,6 @@ function PizzaOrders({authorized}){
             })
             let result = await response.json();
             setOrders(result);
-            console.log(result)
         }
         list_order(); // eslint-disable-next-line
     }, [authorized]);

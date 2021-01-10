@@ -21,7 +21,6 @@ import {
 function RouteSimple({authorized, setAlert}){
   const history  = useHistory();
   const prevState = history.location.state && history.location.state["from"]
-  console.log("loc", prevState === "/orders")
   if(authorized.isAuth && prevState === "/orders"){
     return <Redirect push to="/orders"/>
   }
@@ -54,11 +53,6 @@ function App() {
   }, [role]);
 
   const [alert, setAlert] = React.useState({"red_alert": "none", "green_alert": "none"});
-
-  console.log("role", role);
-  console.log(alert);
-  console.log(authorized.isAuth, authorized.token_id)
-  console.log(loading)
 
   return (
     <div>
