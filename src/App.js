@@ -6,7 +6,7 @@ import Home from "./home"
 import Notification from "./notifications"
 import NavBar from "./navbar"
 import { Login, Signup, ForgotPassword, ResetPassword } from "./user_auth_form"
-import Userboard from "./user"
+import { Userboard , PizzaOrders } from "./user"
 import useAuthorize from "./useAuthorize"
 import Validate from "./validate"
 
@@ -15,19 +15,37 @@ import {
   Switch,
   Redirect,
   Route,
+  useHistory,
 } from "react-router-dom";
+
+function RouteSimple({authorized, setAlert}){
+  const history  = useHistory();
+  const prevState = history.location.state && history.location.state["from"]
+  console.log("loc", prevState === "/orders")
+  if(authorized.isAuth && prevState === "/orders"){
+    return <Redirect push to="/orders"/>
+  }
+  else if(authorized.isAuth){
+    return <Redirect push to="/user"/>
+  }
+  else{
+    return (
+      <Home setAlert={setAlert}/>
+    )
+  }
+}
 
 function App() {
   
   const [user, setUser] = React.useState("");
-  const [role, setRole] = React.useState("user");
+  const [role, setRole] = React.useState("");
   const [loading, setLoading] = React.useState("block");// eslint-disable-next-line
   const {authorized, Authenticate, Logout, saveToken} = useAuthorize({setUser, setLoading, role});
   
   function Action({Page, name}){
     return (
-      (authorized.isAuth)?(<Redirect push to="/dashboard"/>):
-      <Page key={name} saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>
+      (authorized.isAuth)?(<Redirect push to="/user"/>):
+      <Page key={name} setUser={setUser} saveToken={saveToken} setAlert={setAlert} setLoading={setLoading} role={role}/>
     );
   }
 
@@ -37,9 +55,10 @@ function App() {
 
   const [alert, setAlert] = React.useState({"red_alert": "none", "green_alert": "none"});
 
-  console.log(role);
+  console.log("role", role);
   console.log(alert);
-  console.log(authorized.isAuth)
+  console.log(authorized.isAuth, authorized.token_id)
+  console.log(loading)
 
   return (
     <div>
@@ -52,11 +71,10 @@ function App() {
           <Redirect push to="/home"/>
         </Route>
         <Route path="/home">
-          {(authorized.isAuth)?(<Redirect push to="/user"/>):
-          <Home setAlert={setAlert}/>}
+          <RouteSimple authorized = {authorized} setAlert = {setAlert}/>
         </Route>
         <Route path="/login">
-          <Action Page={Login}/>
+          <Action  Page={Login}/>
         </Route>
         <Route path="/signup">
           <Action Page={Signup}/>
@@ -78,6 +96,10 @@ function App() {
         <Route path="/user">
           {(!authorized.isAuth)?(<Redirect push to="/home"/>):
           <Userboard authorized={authorized} />}
+        </Route>
+        <Route path="/orders">
+        {(!authorized.isAuth)?(<Redirect push to={{pathname: "/home", state: {from:"/orders"}}}/>):
+          <PizzaOrders authorized={authorized}/>}
         </Route>
         {/* <PrivateComponents authorized={authorized} setAlert={setAlert}/> */}
         <Redirect to="/home"/>

@@ -14,3 +14,9 @@ code {
 .container-fluid{
   padding: 0;
 }
+
+@media only screen and (max-width: 400px) {
+  body{
+      width: 600px !important;
+  }
+}

@@ -19,7 +19,10 @@ export default function Admin({authorized, setLoading, setAlert, saveToken}){
 
     return (
         <Switch>
-            <Route path={`${url}/signup`}>
+            <Route path={`${url}`}>
+                <h1 style={{textAlign:"center"}}>Under Maintance</h1>
+            </Route>
+            <Route exact path={`${url}/signup`}>
               <Action Page={Signup}/>
             </Route>
         </Switch>

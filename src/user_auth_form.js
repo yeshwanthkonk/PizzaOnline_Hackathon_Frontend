@@ -1,7 +1,7 @@
 import React from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-function Login({saveToken, setAlert, setLoading, role}) {
+function Login({setUser, saveToken, setAlert, setLoading, role}) {
 
     async function login(event){
         event.preventDefault();
@@ -25,7 +25,8 @@ function Login({saveToken, setAlert, setLoading, role}) {
                 setAlert({"red_alert": "block", "green_alert": "none", "msg": result["detail"]})
             else{
                 saveToken(result["token"]);
-                setAlert({"red_alert": "none", "green_alert": "block"})
+                setAlert({"red_alert": "none", "green_alert": "block"});
+                setUser(result["name"])
             } 
         }
         catch(error){
@@ -35,7 +36,7 @@ function Login({saveToken, setAlert, setLoading, role}) {
         setLoading("none");
     }
     
-    const [user, setUser] = React.useState("");
+    const [user, setName] = React.useState("");
     const [password, setPaswword] = React.useState("");
 
     return (
@@ -44,7 +45,7 @@ function Login({saveToken, setAlert, setLoading, role}) {
             <h1>Please Login, here</h1>
             <div className="form-group">
                 <label htmlFor="username">User ID</label>
-                <input type="text" className="form-control" id="username" name="username" placeholder="Email" autoFocus required onChange={(event)=>setUser(event.target.value)}/>
+                <input type="text" className="form-control" id="username" name="username" placeholder="Email" autoFocus required onChange={(event)=>setName(event.target.value)}/>
             </div>
             <div className="form-group">
               <label htmlFor="password">Password</label>
@@ -61,7 +62,7 @@ function Login({saveToken, setAlert, setLoading, role}) {
 
 
 function Signup({setAlert, setLoading, role}) {
-    const [user, setUser] = React.useState("");
+    const [user, setName] = React.useState("");
     const [password, setPaswword] = React.useState("");
     const [email, setEmail] = React.useState("");
 
@@ -115,7 +116,7 @@ function Signup({setAlert, setLoading, role}) {
             <h1>Please Sign Up, here</h1>
             <div className="form-group">
                 <label htmlFor="name">User Name</label>
-                <input type="text" className="form-control" value={user} id="name" name="name" placeholder="Full Name" autoFocus required onChange={(event)=>setUser(event.target.value)}/>
+                <input type="text" className="form-control" value={user} id="name" name="name" placeholder="Full Name" autoFocus required onChange={(event)=>setName(event.target.value)}/>
             </div>
             <div className="form-group">
                 <label htmlFor="email">Email Id</label>

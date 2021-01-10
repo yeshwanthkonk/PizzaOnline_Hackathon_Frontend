@@ -2,27 +2,38 @@ import React from 'react';
 
 export default function useAuthorize({setUser, setLoading, role}) {
 
-    const [authorized, setAuthorization] = React.useState({isAuth: false, token_id: null});
+    function getToken () {
+        return sessionStorage.getItem(`${role}_token_id`);
+    };
+
+    const [authorized, setAuthorization] = React.useState({isAuth: false, token_id: getToken()});
 
     async function Check(){
         let token_id = getToken()
+        console.log("Role", role);
         if(!token_id){
             setAuthorization({isAuth: false, token_id: null})
+            return
         }
-        let response = await fetch(window.env.API_URL+"check_status",{
-            headers:{
-                "Authorization": token_id,
+        try{
+            let response = await fetch(window.env.API_URL+"check_status",{
+                headers:{
+                    "Authorization": token_id,
+                }
+            })
+            if(response["status"]===200)
+                setAuthorization({isAuth: true, token_id})
+            else if(response["status"] === 403){
+                sessionStorage.removeItem(`${role}_token_id`);
+                token_id = null;
+                setAuthorization({isAuth: false, token_id: null});
             }
-        })
-        if(response["status"]===200)
-            setAuthorization({isAuth: true, token_id})
-        else if(response["status"] === 403){
-            sessionStorage.removeItem(`${role}_token_id`);
-            token_id = null;
-            setAuthorization({isAuth: false, token_id: null});
+            let result = await response.json();
+            setUser(result["name"]);
         }
-        let result = await response.json();
-        setUser(result["name"])
+        catch(err){
+            return
+        }
     }
     React.useEffect(()=>{
         (async function(){
@@ -30,11 +41,7 @@ export default function useAuthorize({setUser, setLoading, role}) {
             setLoading("none");
         })();
         // eslint-disable-next-line
-    }, [role])
-
-    function getToken () {
-        return sessionStorage.getItem(`${role}_token_id`);
-    };
+    }, [role]);
 
   const saveToken = token_id => {
     sessionStorage.setItem(`${role}_token_id`, token_id);
