@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function useAuthorize({setUser, setLoading}) {
+export default function useAuthorize({setUser, setLoading, role}) {
 
     const [authorized, setAuthorization] = React.useState({isAuth: false, token_id: null});
 
@@ -16,7 +16,7 @@ export default function useAuthorize({setUser, setLoading}) {
         if(response["status"]===200)
             setAuthorization({isAuth: true, token_id})
         else if(response["status"] === 403){
-            sessionStorage.removeItem("token_id");
+            sessionStorage.removeItem(`${role}_token_id`);
             token_id = null;
             setAuthorization({isAuth: false, token_id: null});
         }
@@ -32,16 +32,16 @@ export default function useAuthorize({setUser, setLoading}) {
     }, [])
 
     function getToken () {
-        return sessionStorage.getItem('token_id');
+        return sessionStorage.getItem(`${role}_token_id`);
     };
 
   const saveToken = token_id => {
-    sessionStorage.setItem('token_id', token_id);
+    sessionStorage.setItem(`${role}_token_id`, token_id);
     setAuthorization({isAuth: true, token_id});
   };
 
   const removeToken = () => {
-    sessionStorage.removeItem("token_id");
+    sessionStorage.removeItem(`${role}_token_id`);
     setAuthorization({isAuth: false, token_id:null});
   }
 

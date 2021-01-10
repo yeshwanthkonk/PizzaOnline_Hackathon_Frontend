@@ -13,7 +13,7 @@ export default function NavBar({isAuth, Logout, user}) {
     return (
         <nav className="navbar navbar-dark bg-dark">
             <a className="navbar-brand" href="/">
-            <img src="./logo.png" width="50" height="50" alt=""/>
+            <img src="logo.png" width="50" height="50" alt=""/>
              &nbsp;Pizza Hack
             </a>
             {

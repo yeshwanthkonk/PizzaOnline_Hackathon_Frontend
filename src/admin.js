@@ -1,12 +1,10 @@
 import {
-    BrowserRouter as Router,
     Switch,
-    Redirect,
     Route,
-    useLocation
+    useRouteMatch
   } from "react-router-dom";
   
-import Signup from "./signup"
+import { Signup } from "./user_auth_form"
 
 export default function Admin({authorized, setLoading, setAlert, saveToken}){
 
@@ -17,13 +15,13 @@ export default function Admin({authorized, setLoading, setAlert, saveToken}){
         );
     }
 
-    console.log(useLocation().pathname)
+    let { url } = useRouteMatch();
 
     return (
-        // <Switch>
-        <Route path="">
-          <Action Page={Signup}/>
-        </Route>
-        // </Switch>
+        <Switch>
+            <Route path={`${url}/signup`}>
+              <Action Page={Signup}/>
+            </Route>
+        </Switch>
     )
 }
