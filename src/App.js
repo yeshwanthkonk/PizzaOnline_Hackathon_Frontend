@@ -38,8 +38,9 @@ function App() {
   
   const [user, setUser] = React.useState("");
   const [role, setRole] = React.useState("");
+  const [download, setDownloadCount] = React.useState(0);
   const [loading, setLoading] = React.useState("block");// eslint-disable-next-line
-  const {authorized, Authenticate, Logout, saveToken} = useAuthorize({setUser, setLoading, role});
+  const {authorized, Authenticate, Logout, saveToken} = useAuthorize({setUser, setLoading, role, download, setDownloadCount});
   
   function Action({Page, name}){
     return (
@@ -93,7 +94,7 @@ function App() {
         </Route>
         <Route path="/orders">
         {(!authorized.isAuth)?(<Redirect push to={{pathname: "/home", state: {from:"/orders"}}}/>):
-          <PizzaOrders authorized={authorized} setLoading={setLoading}/>}
+          <PizzaOrders authorized={authorized} setLoading={setLoading} download={download} setDownloadCount={setDownloadCount}/>}
         </Route>
         {/* <PrivateComponents authorized={authorized} setAlert={setAlert}/> */}
         <Redirect to="/home"/>

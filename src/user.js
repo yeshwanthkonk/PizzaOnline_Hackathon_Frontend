@@ -185,11 +185,12 @@ function PizzaCheckout({pizzas, authorized}){
     )
 }
 
-function PizzaOrders({authorized, setLoading}){
+function PizzaOrders({authorized, setLoading, download, setDownloadCount}){
     const [orders, setOrders] = React.useState([]);
     React.useEffect(()=>{
         async function list_order(){
             setLoading("block");
+            setDownloadCount(++download);
             let response = await fetch(window.env.API_URL+"orders_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -202,7 +203,10 @@ function PizzaOrders({authorized, setLoading}){
             setOrders(result);
         }
         list_order(); 
-        setLoading("none"); // eslint-disable-next-line
+        setDownloadCount(--download);
+        if(!download)
+            setLoading("none");
+        // eslint-disable-next-line
     }, [authorized]);
     return (
         <div style={{textAlign:"center"}}>
@@ -233,13 +237,14 @@ function PizzaOrders({authorized, setLoading}){
     )
 }
 
-function Userboard({authorized, setLoading}){
+function Userboard({authorized, setLoading, download, setDownloadCount}){
 
     const [pizzas, setPizzas] = React.useState([]);
 
     React.useEffect(()=>{
         async function pizza_list(){
             setLoading("block");
+            setDownloadCount(++download);
             let response = await fetch(window.env.API_URL+"pizza_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -251,7 +256,10 @@ function Userboard({authorized, setLoading}){
             setPizzas(result);
         }
         pizza_list();
-        setLoading("none"); // eslint-disable-next-line
+        setDownloadCount(--download);
+        if(!download)
+            setLoading("none");
+        // eslint-disable-next-line
     }, [])
 
     let { url } = useRouteMatch();

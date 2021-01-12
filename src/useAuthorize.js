@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function useAuthorize({setUser, setLoading, role}) {
+export default function useAuthorize({setUser, setLoading, role, download, setDownloadCount}) {
 
     function getToken () {
         return sessionStorage.getItem(`${role}_token_id`);
@@ -10,10 +10,13 @@ export default function useAuthorize({setUser, setLoading, role}) {
 
     async function Check(){
         setLoading("block");
+        setDownloadCount(++download);
         let token_id = getToken()
         if(!token_id){
             setAuthorization({isAuth: false, token_id: null})
-            setLoading("none");
+            setDownloadCount(--download);
+            if(!download)
+                setLoading("none");
             return
         }
         try{
@@ -35,7 +38,8 @@ export default function useAuthorize({setUser, setLoading, role}) {
         catch(err){
             console.log(err);
         }
-        setLoading("none");
+        if(!download)
+            setLoading("none");
     }
     React.useEffect(()=>{
         (async function(){
