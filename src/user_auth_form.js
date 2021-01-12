@@ -243,7 +243,7 @@ function ResetPassword({setAlert, setLoading, role}){
         
     return (
         <div>
-        {(id)?(<img src="https://assets.prestashop2.com/sites/default/files/styles/blog_750x320/public/blog/2019/10/banner_error_404.jpg" alt=""/>):(
+        {(!id)?(<img src="https://assets.prestashop2.com/sites/default/files/styles/blog_750x320/public/blog/2019/10/banner_error_404.jpg" alt=""/>):(
         <form method="POST" style={{width:"380px", margin:"10% auto 0 auto"}} onSubmit={reset_password} key="forgot">
             <img style={{marginLeft: "40%"}} className="mb-4" src="/logo.png" alt="" width="80" height="80"/>
             <h1 className="h3 mb-3 font-weight-normal" id="note">Enter New Password</h1>

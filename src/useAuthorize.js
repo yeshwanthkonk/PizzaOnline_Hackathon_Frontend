@@ -9,9 +9,11 @@ export default function useAuthorize({setUser, setLoading, role}) {
     const [authorized, setAuthorization] = React.useState({isAuth: false, token_id: getToken()});
 
     async function Check(){
+        setLoading("block");
         let token_id = getToken()
         if(!token_id){
             setAuthorization({isAuth: false, token_id: null})
+            setLoading("none");
             return
         }
         try{
@@ -31,8 +33,9 @@ export default function useAuthorize({setUser, setLoading, role}) {
             setUser(result["name"]);
         }
         catch(err){
-            return
+            console.log(err);
         }
+        setLoading("none");
     }
     React.useEffect(()=>{
         (async function(){

@@ -89,11 +89,11 @@ function App() {
         </Route>
         <Route path="/user">
           {(!authorized.isAuth)?(<Redirect push to="/home"/>):
-          <Userboard authorized={authorized} />}
+          <Userboard authorized={authorized} setLoading={setLoading}/>}
         </Route>
         <Route path="/orders">
         {(!authorized.isAuth)?(<Redirect push to={{pathname: "/home", state: {from:"/orders"}}}/>):
-          <PizzaOrders authorized={authorized}/>}
+          <PizzaOrders authorized={authorized} setLoading={setLoading}/>}
         </Route>
         {/* <PrivateComponents authorized={authorized} setAlert={setAlert}/> */}
         <Redirect to="/home"/>

@@ -185,9 +185,10 @@ function PizzaCheckout({pizzas, authorized}){
     )
 }
 
-function PizzaOrders({authorized}){
+function PizzaOrders({authorized, setLoading}){
     const [orders, setOrders] = React.useState([]);
     React.useEffect(()=>{
+        setLoading("block")
         async function list_order(){
             let response = await fetch(window.env.API_URL+"orders_list",{ 
                 method: 'GET', 
@@ -200,12 +201,13 @@ function PizzaOrders({authorized}){
             let result = await response.json();
             setOrders(result);
         }
-        list_order(); // eslint-disable-next-line
+        list_order(); 
+        setLoading("none"); // eslint-disable-next-line
     }, [authorized]);
     return (
         <div style={{textAlign:"center"}}>
             {
-            (orders.length===0)?<h1>Currently No Addons, Available</h1>:
+            (orders.length===0)?<h1>Currently No Orders, Available</h1>:
             orders.map((item, index)=>{
                 let loc = "/files/"+item.image;
                 return(
@@ -231,7 +233,7 @@ function PizzaOrders({authorized}){
     )
 }
 
-function Userboard({authorized}){
+function Userboard({authorized, setLoading}){
 
     const [pizzas, setPizzas] = React.useState([]);
 
