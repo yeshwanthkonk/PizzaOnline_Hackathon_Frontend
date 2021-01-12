@@ -40,6 +40,7 @@ export default function useAuthorize({setUser, setLoading, role}) {
     React.useEffect(()=>{
         (async function(){
             await Check();
+            setLoading("none")
         })();
         // eslint-disable-next-line
     }, [role]);
