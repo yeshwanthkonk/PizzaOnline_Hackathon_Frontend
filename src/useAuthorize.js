@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function useAuthorize({setUser, setLoading, role, download, setDownloadCount}) {
+export default function useAuthorize({setUser, setLoading, role}) {
 
     function getToken () {
         return sessionStorage.getItem(`${role}_token_id`);
@@ -9,17 +9,14 @@ export default function useAuthorize({setUser, setLoading, role, download, setDo
     const [authorized, setAuthorization] = React.useState({isAuth: false, token_id: getToken()});
 
     async function Check(){
-        setLoading("block");
-        setDownloadCount(++download);
+        
         let token_id = getToken()
         if(!token_id){
             setAuthorization({isAuth: false, token_id: null})
-            setDownloadCount(--download);
-            if(!download)
-                setLoading("none");
             return
         }
         try{
+            setLoading("block")
             let response = await fetch(window.env.API_URL+"check_status",{
                 headers:{
                     "Authorization": token_id,
@@ -32,19 +29,17 @@ export default function useAuthorize({setUser, setLoading, role, download, setDo
                 token_id = null;
                 setAuthorization({isAuth: false, token_id: null});
             }
-            let result = await response.json();
-            setUser(result["name"]);
+            await response.json();
+            setLoading("none")
         }
         catch(err){
             console.log(err);
+            setLoading("none")
         }
-        if(!download)
-            setLoading("none");
     }
     React.useEffect(()=>{
         (async function(){
-            await Check()
-            setLoading("none");
+            await Check();
         })();
         // eslint-disable-next-line
     }, [role]);

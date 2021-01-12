@@ -1,4 +1,5 @@
 import React from "react"
+import "./notifications.css";
 
 import {
     Switch,
@@ -185,12 +186,18 @@ function PizzaCheckout({pizzas, authorized}){
     )
 }
 
-function PizzaOrders({authorized, setLoading, download, setDownloadCount}){
+function PizzaOrders({authorized, setLoading}){
     const [orders, setOrders] = React.useState([]);
+    const [downloadStatus, setDownloadStatus] = React.useState("none");
+
+    const loadingDiv = (
+        <div id="load_back" style={{display: downloadStatus}}>
+            <div id="loading"></div>
+        </div>
+    )
     React.useEffect(()=>{
         async function list_order(){
-            setLoading("block");
-            setDownloadCount(++download);
+            setDownloadStatus("block");
             let response = await fetch(window.env.API_URL+"orders_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -201,16 +208,15 @@ function PizzaOrders({authorized, setLoading, download, setDownloadCount}){
             })
             let result = await response.json();
             setOrders(result);
+            setDownloadStatus("none");
         }
         list_order(); 
-        setDownloadCount(--download);
-        if(!download)
-            setLoading("none");
         // eslint-disable-next-line
     }, [authorized]);
     return (
         <div style={{textAlign:"center"}}>
             {
+            (downloadStatus==="block")?loadingDiv:
             (orders.length===0)?<h1>Currently No Orders, Available</h1>:
             orders.map((item, index)=>{
                 let loc = "/files/"+item.image;
@@ -237,14 +243,20 @@ function PizzaOrders({authorized, setLoading, download, setDownloadCount}){
     )
 }
 
-function Userboard({authorized, setLoading, download, setDownloadCount}){
+function Userboard({authorized, setLoading}){
 
     const [pizzas, setPizzas] = React.useState([]);
+    const [downloadStatus, setDownloadStatus] = React.useState("none");
+
+    const loadingDiv = (
+        <div id="load_back" style={{display: downloadStatus}}>
+            <div id="loading"></div>
+        </div>
+    )
 
     React.useEffect(()=>{
         async function pizza_list(){
-            setLoading("block");
-            setDownloadCount(++download);
+            setDownloadStatus("block");
             let response = await fetch(window.env.API_URL+"pizza_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -254,11 +266,9 @@ function Userboard({authorized, setLoading, download, setDownloadCount}){
             })
             let result = await response.json()
             setPizzas(result);
+            setDownloadStatus("none");
         }
         pizza_list();
-        setDownloadCount(--download);
-        if(!download)
-            setLoading("none");
         // eslint-disable-next-line
     }, [])
 
@@ -267,7 +277,8 @@ function Userboard({authorized, setLoading, download, setDownloadCount}){
     return (
         <Switch>
             <Route exact path={`${url}/`}>
-              <PizzaList pizzas={pizzas}/>
+              {(downloadStatus==="block")?loadingDiv:
+              <PizzaList pizzas={pizzas} />}
             </Route>
             <Route path={`${url}/addons`}>
               <PizzaAddons pizzas={pizzas}/>
