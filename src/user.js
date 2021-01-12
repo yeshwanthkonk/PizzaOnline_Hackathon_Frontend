@@ -188,8 +188,8 @@ function PizzaCheckout({pizzas, authorized}){
 function PizzaOrders({authorized, setLoading}){
     const [orders, setOrders] = React.useState([]);
     React.useEffect(()=>{
-        setLoading("block")
         async function list_order(){
+            setLoading("block");
             let response = await fetch(window.env.API_URL+"orders_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -239,6 +239,7 @@ function Userboard({authorized, setLoading}){
 
     React.useEffect(()=>{
         async function pizza_list(){
+            setLoading("block");
             let response = await fetch(window.env.API_URL+"pizza_list",{ 
                 method: 'GET', 
                 headers: { 
@@ -250,6 +251,7 @@ function Userboard({authorized, setLoading}){
             setPizzas(result);
         }
         pizza_list();
+        setLoading("none"); // eslint-disable-next-line
     }, [])
 
     let { url } = useRouteMatch();
